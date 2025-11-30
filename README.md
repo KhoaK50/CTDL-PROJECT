@@ -1,0 +1,3 @@
+- Để tạo ứng dụng, chạy file build_run.bat. Sau đó vào thư mục "build", có file .exe được tạo nên, double-click để khởi động ứng dụng.
+- Ứng dụng mở đầu là phần loading, để không bị sai định dạng, vui lòng không phóng to toàn màn hình
+- Kết thúc phần loading, nhấn phím bất kì để vào menu chính, lúc này có thể phóng to toàn màn hình để đảm bảo đúng định dạng khi hiển thị bảng
