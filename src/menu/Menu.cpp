@@ -5,86 +5,114 @@
 #include <iostream>
 #include <conio.h>      // _getch()
 
-using std::cout;
-using std::endl;
-using std::string;
+// Rule 12: Sử dụng namespace std trong file .cpp
+using namespace std;
 
 // ======================= Constructor =======================
 
+/************
+* @Description Constructor khởi tạo Menu
+*************/
 Menu::Menu(Repository &repo)
     : _repo(repo)
 {
 }
 
-// ============ HÀM HỖ TRỢ VẼ KHUNG MENU ============
+// ============ HÀM HỖ TRỢ VẼ KHUNG MENU (STATIC) ============
 
-// Căn giữa text trong độ rộng width
-static std::string centerText(const std::string &text, int width)
+/************
+* @Description Căn giữa text trong độ rộng cho trước
+* @param strText Chuỗi văn bản cần căn giữa
+* @param iWidth Độ rộng khung
+* @return Chuỗi đã được thêm khoảng trắng
+*************/
+static string centerText(const string &strText, int iWidth)
 {
-    int len = static_cast<int>(text.length());
-    if (len >= width) return text;
+    int iLen = static_cast<int>(strText.length());
+    if (iLen >= iWidth) return strText;
 
-    int left  = (width - len) / 2;
-    int right = width - len - left;
-    return std::string(left, ' ') + text + std::string(right, ' ');
+    int iLeft  = (iWidth - iLen) / 2;
+    int iRight = iWidth - iLen - iLeft;
+    return string(iLeft, ' ') + strText + string(iRight, ' ');
 }
 
-// In dòng full border: ************
-static void printBoxBorder(int width, char border = '*')
+/************
+* @Description In dòng viền đầy đủ (Ví dụ: ************)
+* @param iWidth Độ rộng
+* @param cBorder Ký tự viền
+*************/
+static void printBoxBorder(int iWidth, char cBorder = '*')
 {
-    std::cout << std::string(width, border) << "\n";
+    cout << string(iWidth, cBorder) << "\n";
 }
 
-// In 1 dòng khung chứa text căn giữa
-static void printBoxedTitleLine(const std::string &text, int width, char border = '*')
+/************
+* @Description In dòng tiêu đề có viền và căn giữa
+* @param strText Nội dung tiêu đề
+* @param iWidth Độ rộng
+* @param cBorder Ký tự viền
+*************/
+static void printBoxedTitleLine(const string &strText, int iWidth, char cBorder = '*')
 {
-    int innerWidth = width - 2;                 // trừ 2 dấu *
-    std::string centered = centerText(text, innerWidth);
-    std::cout << border << centered << border << "\n";
+    int iInnerWidth = iWidth - 2;                 // trừ 2 dấu *
+    string strCentered = centerText(strText, iInnerWidth);
+    cout << cBorder << strCentered << cBorder << "\n";
 }
 
-// In 1 dòng menu: * 1. ....                     *
-static void printMenuItemLine(const std::string &text, int width)
+/************
+* @Description In một dòng menu (Ví dụ: * 1. Chuc nang...      *)
+* @param strText Nội dung menu
+* @param iWidth Độ rộng
+*************/
+static void printMenuItemLine(const string &strText, int iWidth)
 {
-    int innerWidth = width - 4; // "* " + text + " *"
-    std::string s = text;
-    if ((int)s.size() > innerWidth)
-        s = s.substr(0, innerWidth);
+    int iInnerWidth = iWidth - 4; // "* " + text + " *"
+    string strDisplay = strText;
+    
+    // Cắt chuỗi nếu quá dài
+    if ((int)strDisplay.size() > iInnerWidth)
+        strDisplay = strDisplay.substr(0, iInnerWidth);
 
-    int padding = innerWidth - (int)s.size();
+    int iPadding = iInnerWidth - (int)strDisplay.size();
 
     setTextColor(COLOR_MENU_FRAME);
-    std::cout << "* ";
+    cout << "* ";
     setTextColor(COLOR_MENU_TEXT);
-    std::cout << s;
-    std::cout << std::string(padding, ' ');
+    cout << strDisplay;
+    cout << string(iPadding, ' ');
     setTextColor(COLOR_MENU_FRAME);
-    std::cout << " *\n";
+    cout << " *\n";
 }
 
-// In 1 dòng khung trống: *                      *
-static void printEmptyMenuLine(int width)
+/************
+* @Description In dòng khung trống (padding)
+* @param iWidth Độ rộng
+*************/
+static void printEmptyMenuLine(int iWidth)
 {
-    int innerWidth = width - 4;
+    int iInnerWidth = iWidth - 4;
     setTextColor(COLOR_MENU_FRAME);
-    std::cout << "* " << std::string(innerWidth, ' ') << " *\n";
+    cout << "* " << string(iInnerWidth, ' ') << " *\n";
 }
 
 // ======================= VONG LAP CHINH =======================
 
+/************
+* @Description Vòng lặp chính điều khiển chương trình
+*************/
 void Menu::run()
 {
     while (true)
     {
-        showMainMenu();
+        this->showMainMenu();
 
         int iChoice = inputIntInRange("Nhap lua chon (0 de thoat): ", 0, 3);
-        handleMainChoice(iChoice);
+        this->handleMainChoice(iChoice);
 
         if (iChoice == 0)
         {
             // Luu du lieu truoc khi thoat
-            _repo.saveAllData();
+            this->_repo.saveAllData();
             cout << "\nDu lieu da duoc luu. Thoat chuong trinh...\n";
             break;
         }
@@ -93,47 +121,53 @@ void Menu::run()
 
 // ======================= MENU CHINH =======================
 
+/************
+* @Description Hiển thị Menu chính
+*************/
 void Menu::showMainMenu() const
 {
     clearScreen();
 
-    const int WIDTH = 60;
+    const int MENU_WIDTH = 60;
 
     // Khung + tiêu đề (cyan)
     setTextColor(COLOR_MENU_FRAME);
-    printBoxBorder(WIDTH);
-    printBoxedTitleLine("HE THONG QUAN LY CHUYEN BAY", WIDTH);
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
+    printBoxedTitleLine("HE THONG QUAN LY CHUYEN BAY", MENU_WIDTH);
+    printBoxBorder(MENU_WIDTH);
 
     // Nội dung menu (xanh lá)
-    printEmptyMenuLine(WIDTH);
-    printMenuItemLine("1. Xem danh sach chuyen bay", WIDTH);
-    printMenuItemLine("2. Dat ve (khach ben ngoai he thong)", WIDTH);
-    printMenuItemLine("3. Dang nhap quan ly", WIDTH);
-    printMenuItemLine("0. Thoat va luu du lieu", WIDTH);
-    printEmptyMenuLine(WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
+    printMenuItemLine("1. Xem danh sach chuyen bay", MENU_WIDTH);
+    printMenuItemLine("2. Dat ve (khach ben ngoai he thong)", MENU_WIDTH);
+    printMenuItemLine("3. Dang nhap quan ly", MENU_WIDTH);
+    printMenuItemLine("0. Thoat va luu du lieu", MENU_WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
 
     setTextColor(COLOR_MENU_FRAME);
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
     setTextColor(COLOR_DEFAULT);
 
     cout << "\n";
 }
 
+/************
+* @Description Xử lý lựa chọn Menu chính
+*************/
 void Menu::handleMainChoice(int iChoice)
 {
     switch (iChoice)
     {
     case 1:
-        displayAllFlights();
+        this->displayAllFlights();
         break;
 
     case 2:
-        userBookTicket();
+        this->userBookTicket();
         break;
 
     case 3:
-        loginAndManagementMenu();
+        this->loginAndManagementMenu();
         break;
 
     case 0:
@@ -145,22 +179,26 @@ void Menu::handleMainChoice(int iChoice)
 
 // ======================= LOGIN + MENU QUAN LY =======================
 
+/************
+* @Description Quy trình đăng nhập và chuyển hướng sang Menu quản lý
+*************/
 void Menu::loginAndManagementMenu()
 {
-    const int iMaxAttempts = 3;
-    int       iFailedCount = 0;
+    const int MAX_ATTEMPTS = 3;
+    const int KEY_ESC = 27;
+    int iFailedCount = 0;
 
     while (true)
     {
         clearScreen();
 
-        const int WIDTH = 50;
+        const int FORM_WIDTH = 50;
 
         // Khung đăng nhập
         setTextColor(COLOR_MENU_FRAME);
-        printBoxBorder(WIDTH);
-        printBoxedTitleLine("DANG NHAP HE THONG", WIDTH);
-        printBoxBorder(WIDTH);
+        printBoxBorder(FORM_WIDTH);
+        printBoxedTitleLine("DANG NHAP HE THONG", FORM_WIDTH);
+        printBoxBorder(FORM_WIDTH);
         setTextColor(COLOR_DEFAULT);
 
         cout << "\n";
@@ -177,8 +215,8 @@ void Menu::loginAndManagementMenu()
         setTextColor(COLOR_DEFAULT);
         string strPassword = inputPassword("");
 
-        // Kiem tra tai khoan
-        if (_repo.checkAdminLogin(strUserName, strPassword))
+        // Kiem tra tai khoan (Rule 27: dùng this->)
+        if (this->_repo.checkAdminLogin(strUserName, strPassword))
         {
             setTextColor(COLOR_SUCCESS);
             cout << "\nDang nhap thanh cong!\n";
@@ -188,9 +226,9 @@ void Menu::loginAndManagementMenu()
             // Vao menu quan ly
             while (true)
             {
-                showManagementMenu();
+                this->showManagementMenu();
                 int iChoice = inputIntInRange("Nhap lua chon (0 de quay ve menu chinh): ", 0, 4);
-                handleManagementChoice(iChoice);
+                this->handleManagementChoice(iChoice);
 
                 if (iChoice == 0)
                 {
@@ -203,16 +241,16 @@ void Menu::loginAndManagementMenu()
         iFailedCount++;
 
         setTextColor(COLOR_ERROR);
-        cout << "\nSai ten dang nhap hoac mat khau! (" << iFailedCount << "/" << iMaxAttempts << ")\n";
+        cout << "\nSai ten dang nhap hoac mat khau! (" << iFailedCount << "/" << MAX_ATTEMPTS << ")\n";
         setTextColor(COLOR_DEFAULT);
 
-        if (iFailedCount >= iMaxAttempts)
+        if (iFailedCount >= MAX_ATTEMPTS)
         {
-            cout << "Ban da nhap sai " << iMaxAttempts << " lan.\n";
+            cout << "Ban da nhap sai " << MAX_ATTEMPTS << " lan.\n";
             cout << "Nhan ESC de quay ve menu chinh, hoac phim bat ky de thu lai...\n";
 
             int cKey = _getch();
-            if (cKey == 27)       // 27 = ESC
+            if (cKey == KEY_ESC) 
             {
                 return;
             }
@@ -226,50 +264,56 @@ void Menu::loginAndManagementMenu()
 
 // ======================= MENU QUAN LY =======================
 
+/************
+* @Description Hiển thị Menu quản lý
+*************/
 void Menu::showManagementMenu() const
 {
     clearScreen();
 
-    const int WIDTH = 60;
+    const int MENU_WIDTH = 60;
 
     setTextColor(COLOR_MENU_FRAME);
-    printBoxBorder(WIDTH);
-    printBoxedTitleLine("MENU QUAN LY", WIDTH);
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
+    printBoxedTitleLine("MENU QUAN LY", MENU_WIDTH);
+    printBoxBorder(MENU_WIDTH);
 
-    printEmptyMenuLine(WIDTH);
-    printMenuItemLine("1. Xu ly dat ve", WIDTH);
-    printMenuItemLine("2. Xu ly tra / huy ve", WIDTH);
-    printMenuItemLine("3. Thong ke", WIDTH);
-    printMenuItemLine("4. UNDO lan dat ve gan nhat", WIDTH);
-    printMenuItemLine("0. Quay ve menu chinh", WIDTH);
-    printEmptyMenuLine(WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
+    printMenuItemLine("1. Xu ly dat ve", MENU_WIDTH);
+    printMenuItemLine("2. Xu ly tra / huy ve", MENU_WIDTH);
+    printMenuItemLine("3. Thong ke", MENU_WIDTH);
+    printMenuItemLine("4. UNDO lan dat ve gan nhat", MENU_WIDTH);
+    printMenuItemLine("0. Quay ve menu chinh", MENU_WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
 
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
     setTextColor(COLOR_DEFAULT);
 
     cout << "\n";
 }
 
+/************
+* @Description Xử lý lựa chọn Menu quản lý
+*************/
 void Menu::handleManagementChoice(int iChoice)
 {
     switch (iChoice)
     {
     case 1:
-        adminProcessBooking();
+        this->adminProcessBooking();
         break;
 
     case 2:
-        adminCancelTicket();
+        this->adminCancelTicket();
         break;
 
     case 3:
     {
         while (true)
         {
-            showStatisticMenu();
+            this->showStatisticMenu();
             int iSub = inputIntInRange("Nhap lua chon (0 de quay lai): ", 0, 3);
-            handleStatisticChoice(iSub);
+            this->handleStatisticChoice(iSub);
             if (iSub == 0)
             {
                 break;
@@ -279,7 +323,7 @@ void Menu::handleManagementChoice(int iChoice)
     }
 
     case 4:
-        undoLastBooking();
+        this->undoLastBooking();
         break;
 
     case 0:
@@ -290,44 +334,50 @@ void Menu::handleManagementChoice(int iChoice)
 
 // ======================= MENU THONG KE =======================
 
+/************
+* @Description Hiển thị Menu thống kê
+*************/
 void Menu::showStatisticMenu() const
 {
     clearScreen();
 
-    const int WIDTH = 60;
+    const int MENU_WIDTH = 60;
 
     setTextColor(COLOR_MENU_FRAME);
-    printBoxBorder(WIDTH);
-    printBoxedTitleLine("MENU THONG KE", WIDTH);
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
+    printBoxedTitleLine("MENU THONG KE", MENU_WIDTH);
+    printBoxBorder(MENU_WIDTH);
 
-    printEmptyMenuLine(WIDTH);
-    printMenuItemLine("1. Thong ke khach cua 1 chuyen bay", WIDTH);
-    printMenuItemLine("2. Thong ke ghe con trong cua 1 chuyen", WIDTH);
-    printMenuItemLine("3. Thong ke so lan 1 may bay thuc hien chuyen bay", WIDTH);
-    printMenuItemLine("0. Quay ve menu quan ly", WIDTH);
-    printEmptyMenuLine(WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
+    printMenuItemLine("1. Thong ke khach cua 1 chuyen bay", MENU_WIDTH);
+    printMenuItemLine("2. Thong ke ghe con trong cua 1 chuyen", MENU_WIDTH);
+    printMenuItemLine("3. Thong ke so lan 1 may bay thuc hien chuyen bay", MENU_WIDTH);
+    printMenuItemLine("0. Quay ve menu quan ly", MENU_WIDTH);
+    printEmptyMenuLine(MENU_WIDTH);
 
-    printBoxBorder(WIDTH);
+    printBoxBorder(MENU_WIDTH);
     setTextColor(COLOR_DEFAULT);
 
     cout << "\n";
 }
 
+/************
+* @Description Xử lý lựa chọn Menu thống kê
+*************/
 void Menu::handleStatisticChoice(int iChoice)
 {
     switch (iChoice)
     {
     case 1:
-        statisticsByFlight();
+        this->statisticsByFlight();
         break;
 
     case 2:
-        statisticsFreeSeats();
+        this->statisticsFreeSeats();
         break;
 
     case 3:
-        statisticsPlaneUsage();
+        this->statisticsPlaneUsage();
         break;
 
     case 0:
@@ -345,16 +395,23 @@ void Menu::handleStatisticChoice(int iChoice)
 
 // ----- 1. Hien thi danh sach chuyen bay -----
 
+/************
+* @Description Hiển thị tất cả chuyến bay
+*************/
 void Menu::displayAllFlights()
 {
     clearScreen();
-    _repo.printAllFlights();
+    // Rule 27: Dùng this->
+    this->_repo.printAllFlights();
     cout << "\n";
     pauseScreen();
 }
 
 // ----- 2. Khach ben ngoai dat ve (vao Queue) -----
 
+/************
+* @Description Chức năng đặt vé dành cho khách hàng
+*************/
 void Menu::userBookTicket()
 {
     clearScreen();
@@ -362,13 +419,13 @@ void Menu::userBookTicket()
     cout << "===== DAT VE CHO KHACH HANG =====\n";
     setTextColor(COLOR_DEFAULT);
 
-    // B1. Nhap thong tin co ban
+    // B1. Nhap thong tin co ban (biến local dùng Hungarian)
     string strFlightId  = inputValidFlightId("Nhap ma chuyen bay: ");
     string strIdNumber  = inputValidIDNumber("Nhap CMND/CCCD (9 hoac 12 so): ");
     string strFullName  = inputValidFullName("Nhap ho ten khach hang: ");
 
     // B2. Tim chuyen bay tu Repository de hien so do ghe
-    const Flight* pFlight = _repo.getFlightConst(strFlightId);
+    const Flight* pFlight = this->_repo.getFlightConst(strFlightId);
     if (!pFlight)
     {
         setTextColor(COLOR_ERROR);
@@ -385,17 +442,17 @@ void Menu::userBookTicket()
 
     pFlight->printDetail();
 
-    int totalSeats = pFlight->getTotalSeatCount();
-    cout << "\n(Chon so ghe trong khoang 1.." << totalSeats << ")\n\n";
+    int iTotalSeats = pFlight->getTotalSeatCount();
+    cout << "\n(Chon so ghe trong khoang 1.." << iTotalSeats << ")\n\n";
 
-    int iSeatNumber = inputIntStrict("Nhap so ghe muon dat: ", 1, totalSeats);
+    int iSeatNumber = inputIntStrict("Nhap so ghe muon dat: ", 1, iTotalSeats);
 
-    bool bOk = _repo.userRegisterBooking(strFlightId,
-                                         strIdNumber,
-                                         strFullName,
-                                         iSeatNumber);
+    bool bIsSuccess = this->_repo.userRegisterBooking(strFlightId,
+                                                      strIdNumber,
+                                                      strFullName,
+                                                      iSeatNumber);
 
-    if (bOk)
+    if (bIsSuccess)
     {
         setTextColor(COLOR_SUCCESS);
         cout << "\nDa them yeu cau dat ve vao hang doi.\n";
@@ -412,6 +469,9 @@ void Menu::userBookTicket()
 
 // ----- 3. Admin xu ly dat ve trong Queue -----
 
+/************
+* @Description Admin duyệt hoặc từ chối các yêu cầu đặt vé
+*************/
 void Menu::adminProcessBooking()
 {
     while (true)
@@ -421,24 +481,24 @@ void Menu::adminProcessBooking()
         cout << "===== XU LY DAT VE (ADMIN) =====\n\n";
         setTextColor(COLOR_DEFAULT);
 
-        _repo.printWaitingBookings();
+        this->_repo.printWaitingBookings();
 
         cout << "\nY: Duyet yeu cau ve dat"
              << "\nN: Huy / bo qua yeu cau ve dat"
              << "\n0: Quay ve menu quan ly\n\n";
 
-        std::string s = inputNonEmptyString("Nhap lua chon (Y/N/0): ");
-        char c = s.empty() ? '0' : s[0];
+        string strInput = inputNonEmptyString("Nhap lua chon (Y/N/0): ");
+        char cChoice = strInput.empty() ? '0' : strInput[0];
 
-        if (c == '0')
+        if (cChoice == '0')
         {
             return;
         }
-        else if (c == 'y' || c == 'Y')
+        else if (cChoice == 'y' || cChoice == 'Y')
         {
-            bool bOk = _repo.adminProcessNextBooking();
+            bool bIsSuccess = this->_repo.adminProcessNextBooking();
 
-            if (!bOk)
+            if (!bIsSuccess)
             {
                 setTextColor(COLOR_ERROR);
                 cout << "\nKhong xu ly duoc yeu cau dat ve.\n";
@@ -447,10 +507,10 @@ void Menu::adminProcessBooking()
 
             pauseScreen();
         }
-        else if (c == 'n' || c == 'N')
+        else if (cChoice == 'n' || cChoice == 'N')
         {
-            bool bOk = _repo.rejectNextBooking();
-            (void)bOk;
+            bool bIsSuccess = this->_repo.rejectNextBooking();
+            (void)bIsSuccess; // Suppress unused variable warning
 
             pauseScreen();
         }
@@ -466,6 +526,9 @@ void Menu::adminProcessBooking()
 
 // ----- 4. Admin huy ve truc tiep -----
 
+/************
+* @Description Admin hủy vé đã đặt
+*************/
 void Menu::adminCancelTicket()
 {
     clearScreen();
@@ -476,9 +539,9 @@ void Menu::adminCancelTicket()
     string strFlightId = inputValidFlightId("Nhap ma chuyen bay: ");
     int    iSeatNumber = inputIntStrict("Nhap so ghe can huy (1..300): ", 1, 300);
 
-    bool bOk = _repo.adminCancelTicket(strFlightId, iSeatNumber);
+    bool bIsSuccess = this->_repo.adminCancelTicket(strFlightId, iSeatNumber);
 
-    if (bOk)
+    if (bIsSuccess)
     {
         setTextColor(COLOR_SUCCESS);
         cout << "\nDa huy ve thanh cong.\n";
@@ -495,31 +558,43 @@ void Menu::adminCancelTicket()
 
 // ----- 5. Thong ke khach cua 1 chuyen -----
 
+/************
+* @Description Thống kê hành khách theo chuyến bay
+*************/
 void Menu::statisticsByFlight()
 {
     string strFlightId = inputValidFlightId("Nhap ma chuyen bay: ");
-    _repo.statisticsPassengersOfFlight(strFlightId);
+    this->_repo.statisticsPassengersOfFlight(strFlightId);
 }
 
 // ----- 6. Thong ke ghe trong cua 1 chuyen -----
 
+/************
+* @Description Thống kê ghế trống
+*************/
 void Menu::statisticsFreeSeats()
 {
     string strFlightId = inputValidFlightId("Nhap ma chuyen bay: ");
-    _repo.statisticsFreeSeats(strFlightId);
+    this->_repo.statisticsFreeSeats(strFlightId);
 }
 
 // ----- 7. Thong ke so lan 1 may bay thuc hien chuyen -----
 
+/************
+* @Description Thống kê tần suất bay của máy bay
+*************/
 void Menu::statisticsPlaneUsage()
 {
     string strPlaneId = inputNonEmptyString("Nhap so hieu may bay: ");
     strPlaneId = toUpper(strPlaneId);
-    _repo.statisticsPlaneUsage(strPlaneId);
+    this->_repo.statisticsPlaneUsage(strPlaneId);
 }
 
 // ----- 8. UNDO booking gan nhat -----
 
+/************
+* @Description Hoàn tác lệnh đặt vé gần nhất
+*************/
 void Menu::undoLastBooking()
 {
     clearScreen();
@@ -527,9 +602,9 @@ void Menu::undoLastBooking()
     cout << "===== UNDO LAN DAT VE GAN NHAT =====\n";
     setTextColor(COLOR_DEFAULT);
 
-    bool bOk = _repo.undoLastBooking();
+    bool bIsSuccess = this->_repo.undoLastBooking();
 
-    if (!bOk)
+    if (!bIsSuccess)
     {
         setTextColor(COLOR_ERROR);
         cout << "\nKhong the UNDO.\n";

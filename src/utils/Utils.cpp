@@ -10,9 +10,8 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <windows.h>    // SetConsoleTextAttribute, GetStdHandle
+#include <windows.h>    // SetConsoleTextAttribute, GetStdHandle, Sleep
 
-#include <thread>
 #include <chrono>
 #include <sstream>
 #include <ctime>
@@ -23,17 +22,27 @@ using namespace std;
 
 // ================== HÀM XỬ LÝ CONSOLE ==================
 
+/************
+* @Description Xóa màn hình console
+*************/
 void clearScreen()
 {
     system("cls");
 }
 
+/************
+* @Description Tạm dừng chương trình chờ người dùng nhấn Enter
+*************/
 void pauseScreen()
 {
     cout << "Nhan Enter de tiep tuc...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+/************
+* @Description Đổi màu chữ console
+* @param iColorCode Mã màu
+*************/
 void setTextColor(int iColorCode)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -43,6 +52,13 @@ void setTextColor(int iColorCode)
 
 // ================== HÀM NHẬP LIỆU AN TOÀN ==================
 
+/************
+* @Description Nhập số nguyên trong khoảng
+* @param strPrompt Câu nhắc
+* @param iMin Giá trị nhỏ nhất
+* @param iMax Giá trị lớn nhất
+* @return Số nguyên hợp lệ
+*************/
 int inputIntInRange(const string &strPrompt, int iMin, int iMax)
 {
     int iValue = 0;
@@ -77,6 +93,11 @@ int inputIntInRange(const string &strPrompt, int iMin, int iMax)
     }
 }
 
+/************
+* @Description Nhập chuỗi không rỗng
+* @param strPrompt Câu nhắc
+* @return Chuỗi đã nhập và trim
+*************/
 string inputNonEmptyString(const string &strPrompt)
 {
     string strInput;
@@ -99,6 +120,11 @@ string inputNonEmptyString(const string &strPrompt)
     }
 }
 
+/************
+* @Description Nhập mật khẩu có che ký tự
+* @param strPrompt Câu nhắc
+* @return Chuỗi mật khẩu
+*************/
 string inputPassword(const string &strPrompt)
 {
     cout << strPrompt;
@@ -138,6 +164,11 @@ string inputPassword(const string &strPrompt)
     return strPassword;
 }
 
+/************
+* @Description Nhập ngày hợp lệ dd/mm/yyyy
+* @param strPrompt Câu nhắc
+* @return Chuỗi ngày hợp lệ
+*************/
 string inputValidDate(const string &strPrompt)
 {
     while (true)
@@ -155,6 +186,11 @@ string inputValidDate(const string &strPrompt)
     }
 }
 
+/************
+* @Description Nhập ngày giờ hợp lệ dd/mm/yyyy HH:MM
+* @param strPrompt Câu nhắc
+* @return Chuỗi ngày giờ hợp lệ
+*************/
 string inputValidDateTime(const string &strPrompt)
 {
     while (true)
@@ -171,6 +207,12 @@ string inputValidDateTime(const string &strPrompt)
 }
 
 // ===== NHẬP HỌ TÊN HỢP LỆ =====
+
+/************
+* @Description Nhập họ tên hợp lệ
+* @param strPrompt Câu nhắc
+* @return Họ tên đã chuẩn hóa (UPPER)
+*************/
 string inputValidFullName(const string &strPrompt)
 {
     while (true)
@@ -212,6 +254,12 @@ string inputValidFullName(const string &strPrompt)
 }
 
 // ===== NHẬP CMND / CCCD HỢP LỆ =====
+
+/************
+* @Description Nhập CMND/CCCD hợp lệ
+* @param strPrompt Câu nhắc
+* @return Chuỗi số ID
+*************/
 string inputValidIDNumber(const string &strPrompt)
 {
     while (true)
@@ -267,6 +315,12 @@ string inputValidIDNumber(const string &strPrompt)
 }
 
 // ===== NHẬP MÃ CHUYẾN BAY HỢP LỆ =====
+
+/************
+* @Description Nhập mã chuyến bay hợp lệ
+* @param strPrompt Câu nhắc
+* @return Mã chuyến bay (UPPER)
+*************/
 string inputValidFlightId(const string &strPrompt)
 {
     while (true)
@@ -297,6 +351,14 @@ string inputValidFlightId(const string &strPrompt)
 }
 
 // ===== NHẬP SỐ NGUYÊN KIỂM TRA CHẶT =====
+
+/************
+* @Description Nhập số nguyên kiểm tra chặt chẽ
+* @param strPrompt Câu nhắc
+* @param iMin Giá trị min
+* @param iMax Giá trị max
+* @return Số nguyên
+*************/
 int inputIntStrict(const string &strPrompt, int iMin, int iMax)
 {
     while (true)
@@ -348,6 +410,11 @@ int inputIntStrict(const string &strPrompt, int iMin, int iMax)
 
 // ================== HÀM XỬ LÝ CHUỖI ==================
 
+/************
+* @Description Cắt khoảng trắng 2 đầu chuỗi
+* @param strInput Chuỗi vào
+* @return Chuỗi kết quả
+*************/
 string trim(const string &strInput)
 {
     if (strInput.empty())
@@ -371,6 +438,11 @@ string trim(const string &strInput)
     return strInput.substr(iLeft, iRight - iLeft + 1);
 }
 
+/************
+* @Description Chuyển chuỗi sang in hoa
+* @param strInput Chuỗi vào
+* @return Chuỗi in hoa
+*************/
 string toUpper(const string &strInput)
 {
     string strResult = strInput;
@@ -387,6 +459,11 @@ string toUpper(const string &strInput)
 
 // ================== KIỂM TRA NGÀY ==================
 
+/************
+* @Description Kiểm tra tính hợp lệ của ngày dd/mm/yyyy
+* @param strDate Chuỗi ngày
+* @return true nếu hợp lệ
+*************/
 bool isValidDate(const string &strDate)
 {
     // Dinh dang: dd/mm/yyyy -> 10 ky tu
@@ -464,6 +541,12 @@ bool isValidDate(const string &strDate)
 
 // ================== HỖ TRỢ TÍNH KHOẢNG CÁCH NGÀY ==================
 
+/************
+* @Description Parse chuỗi ngày sang struct tm
+* @param strDate Chuỗi ngày
+* @param outTm Struct tm kết quả
+* @return true nếu thành công
+*************/
 static bool parseDateDMY(const string &strDate, std::tm &outTm)
 {
     if (!isValidDate(strDate))
@@ -487,6 +570,12 @@ static bool parseDateDMY(const string &strDate, std::tm &outTm)
     return true;
 }
 
+/************
+* @Description Tính số ngày giữa 2 mốc thời gian
+* @param dateFrom Ngày bắt đầu
+* @param dateTo Ngày kết thúc
+* @return Số ngày chênh lệch
+*************/
 int daysBetweenDates(const string &dateFrom, const string &dateTo)
 {
     std::tm tmFrom{}, tmTo{};
@@ -504,6 +593,11 @@ int daysBetweenDates(const string &dateFrom, const string &dateTo)
     return diffDays;
 }
 
+/************
+* @Description Tính số ngày từ hôm nay đến ngày chỉ định
+* @param strDate Ngày đích
+* @return Số ngày chênh lệch (âm nếu quá khứ)
+*************/
 int getDaysFromTodayToDate(const std::string &strDate)
 {
     if (!isValidDate(strDate))
@@ -547,6 +641,11 @@ int getDaysFromTodayToDate(const std::string &strDate)
     return diffDays;
 }
 
+/************
+* @Description Kiểm tra hợp lệ ngày giờ dd/mm/yyyy HH:MM
+* @param strDateTime Chuỗi ngày giờ
+* @return true nếu hợp lệ
+*************/
 bool isValidDateTime(const string &strDateTime)
 {
     // Dinh dang: dd/mm/yyyy HH:MM -> 16 ky tu
@@ -584,6 +683,10 @@ bool isValidDateTime(const string &strDateTime)
 
 // ================== HÀM THỜI GIAN / TIỆN ÍCH KHÁC ==================
 
+/************
+* @Description Dừng chương trình trong iSeconds giây
+* @param iSeconds Số giây
+*************/
 void sleepSeconds(int iSeconds)
 {
     if (iSeconds <= 0)
@@ -591,9 +694,14 @@ void sleepSeconds(int iSeconds)
         return;
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(iSeconds));
+    // Đã sửa: Dùng hàm Sleep của Windows (tính bằng ms)
+    Sleep(iSeconds * 1000);
 }
 
+/************
+* @Description Lấy chuỗi thời gian hiện tại
+* @return Chuỗi dd/mm/yyyy HH:MM:SS
+*************/
 string getCurrentTimeString()
 {
     std::time_t tNow = std::time(nullptr);
@@ -621,6 +729,11 @@ string getCurrentTimeString()
 
 // ================== HỖ TRỢ DI CHUYỂN CON TRỎ ==================
 
+/************
+* @Description Di chuyển con trỏ console tới toạ độ x,y
+* @param x Toạ độ cột
+* @param y Toạ độ dòng
+*************/
 void gotoXY(int x, int y)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -630,6 +743,10 @@ void gotoXY(int x, int y)
     SetConsoleCursorPosition(hConsole, pos);
 }
 
+/************
+* @Description Ẩn/Hiện con trỏ console
+* @param bVisible true để hiện, false để ẩn
+*************/
 static void setCursorVisible(bool bVisible)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -642,7 +759,10 @@ static void setCursorVisible(bool bVisible)
 
 // ================== MÀN HÌNH LOADING KHI KHỞI ĐỘNG ==================
 
-// Lấy số cột hiện tại của console
+/************
+* @Description Lấy chiều rộng console hiện tại
+* @return Chiều rộng (số cột)
+*************/
 int getConsoleWidth()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -657,7 +777,12 @@ int getConsoleWidth()
     return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 
-// In 1 dòng text căn giữa theo chiều rộng console
+/************
+* @Description In text căn giữa màn hình
+* @param y Dòng cần in
+* @param text Nội dung text
+* @param color Màu sắc
+*************/
 static void printCentered(int y, const std::string &text, int color = COLOR_DEFAULT)
 {
     int width = getConsoleWidth();
@@ -673,6 +798,11 @@ static void printCentered(int y, const std::string &text, int color = COLOR_DEFA
 // Vẽ chiếc máy bay banner tại vị trí (x, y)
 static const int PLANE_WIDTH = 40;
 
+/************
+* @Description Vẽ hình máy bay ASCII tại toạ độ
+* @param x Cột
+* @param y Dòng
+*************/
 static void drawPlaneAt(int x, int y)
 {
     gotoXY(x, y + 0);
@@ -697,10 +827,13 @@ static void drawPlaneAt(int x, int y)
     std::cout << "      `---~~\\___________/------------`````";
 
     gotoXY(x, y + 7);
-    std::cout << "      =  ===(_________D";
+    std::cout << "      =   ===(_________D";
 }
 
-// Xóa vùng máy bay trước khi vẽ frame mới
+/************
+* @Description Xóa vùng vẽ máy bay
+* @param y Dòng bắt đầu xóa
+*************/
 static void clearPlaneArea(int y)
 {
     const int PLANE_AREA_HEIGHT = 8;
@@ -713,6 +846,9 @@ static void clearPlaneArea(int y)
     }
 }
 
+/************
+* @Description Hiển thị màn hình Loading với hiệu ứng
+*************/
 void showLoadingScreen()
 {
     clearScreen();
@@ -794,7 +930,8 @@ void showLoadingScreen()
         std::cout.flush();
 
         // Loading chậm: 80ms / 1%
-        std::this_thread::sleep_for(std::chrono::milliseconds(80));
+        // Đã sửa: Dùng hàm Sleep (ms) thay cho std::this_thread
+        Sleep(80);
     }
 
     // Hoàn tất

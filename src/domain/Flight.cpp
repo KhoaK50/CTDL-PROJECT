@@ -9,16 +9,17 @@
 #include <algorithm>
 #include <sstream>
 
-using std::cout;
-using std::endl;
-using std::left;
-using std::right;
-using std::setw;
-using std::string;
+using namespace std;
 
 // ----------------------------------------------------------
-// Ham ho tro: doi trang thai -> chuoi de in ra man hinh
+// Helper Functions (Internal linkage)
 // ----------------------------------------------------------
+
+/************
+* @Description Chuyển đổi trạng thái enum sang chuỗi hiển thị
+* @param eStatus Trạng thái chuyến bay
+* @return Chuỗi mô tả trạng thái
+*************/
 static string flightStatusToString(FlightStatus eStatus)
 {
     switch (eStatus)
@@ -36,9 +37,11 @@ static string flightStatusToString(FlightStatus eStatus)
     }
 }
 
-// ----------------------------------------------------------
-// Chọn màu cho từng trạng thái chuyến bay
-// ----------------------------------------------------------
+/************
+* @Description Lấy mã màu tương ứng với trạng thái
+* @param eStatus Trạng thái chuyến bay
+* @return Mã màu (int) defined trong Config.h
+*************/
 static int getStatusColor(FlightStatus eStatus)
 {
     switch (eStatus)
@@ -58,18 +61,24 @@ static int getStatusColor(FlightStatus eStatus)
 
 // ========================= Constructors =========================
 
+/************
+* @Description Constructor mặc định
+*************/
 Flight::Flight()
     : _strFlightId(""),
       _strPlaneId(""),
       _strDate(""),
+      _strDepartTime(""),
       _strDestination(""),
       _eStatus(FLIGHT_AVAILABLE),
-      _seatList(0),
-      _listTickets(),
-      _strDepartTime("")       
+      _SeatList(0),
+      _ListTickets()
 {
 }
 
+/************
+* @Description Constructor đầy đủ tham số
+*************/
 Flight::Flight(const string &strFlightId,
                const string &strPlaneId,
                const string &strDate,
@@ -79,133 +88,189 @@ Flight::Flight(const string &strFlightId,
     : _strFlightId(strFlightId),
       _strPlaneId(strPlaneId),
       _strDate(strDate),
+      _strDepartTime(""),
       _strDestination(strDestination),
       _eStatus(eStatus),
-      _seatList(iTotalSeats),
-      _listTickets(),
-      _strDepartTime("")      
+      _SeatList(iTotalSeats),
+      _ListTickets()
 {
 }
 
+/************
+* @Description Copy Constructor
+*************/
 Flight::Flight(const Flight &other)
     : _strFlightId(other._strFlightId),
       _strPlaneId(other._strPlaneId),
       _strDate(other._strDate),
+      _strDepartTime(other._strDepartTime),
       _strDestination(other._strDestination),
       _eStatus(other._eStatus),
-      _seatList(other._seatList),
-      _listTickets(other._listTickets),
-      _strDepartTime(other._strDepartTime)  
+      _SeatList(other._SeatList),
+      _ListTickets(other._ListTickets)
 {
 }
 
-
+/************
+* @Description Destructor
+*************/
 Flight::~Flight()
 {
-    // _seatList va _listTickets tu dong giai phong
 }
 
 // ============================== Setter ==============================
 
+/************
+* @Description Thiết lập mã chuyến bay
+*************/
 void Flight::setFlightId(const string &strFlightId)
 {
-    _strFlightId = strFlightId;
+    this->_strFlightId = strFlightId;
 }
 
+/************
+* @Description Thiết lập mã máy bay
+*************/
 void Flight::setPlaneId(const string &strPlaneId)
 {
-    _strPlaneId = strPlaneId;
+    this->_strPlaneId = strPlaneId;
 }
 
+/************
+* @Description Thiết lập ngày khởi hành
+*************/
 void Flight::setDate(const string &strDate)
 {
-    _strDate = strDate;
+    this->_strDate = strDate;
 }
 
+/************
+* @Description Thiết lập giờ khởi hành
+*************/
+void Flight::setDepartTime(const string &strDepartTime)
+{
+    this->_strDepartTime = strDepartTime;
+}
+
+/************
+* @Description Thiết lập điểm đến
+*************/
 void Flight::setDestination(const string &strDestination)
 {
-    _strDestination = strDestination;
+    this->_strDestination = strDestination;
 }
 
+/************
+* @Description Thiết lập trạng thái
+*************/
 void Flight::setStatus(FlightStatus eStatus)
 {
-    _eStatus = eStatus;
+    this->_eStatus = eStatus;
 }
 
 // ============================== Getter ==============================
 
+/************
+* @Description Lấy mã chuyến bay
+*************/
 string Flight::getFlightId() const
 {
-    return _strFlightId;
+    return this->_strFlightId;
 }
 
+/************
+* @Description Lấy mã máy bay
+*************/
 string Flight::getPlaneId() const
 {
-    return _strPlaneId;
+    return this->_strPlaneId;
 }
 
+/************
+* @Description Lấy ngày khởi hành
+*************/
 string Flight::getDate() const
 {
-    return _strDate;
+    return this->_strDate;
 }
 
+/************
+* @Description Lấy giờ khởi hành
+*************/
+string Flight::getDepartTime() const
+{
+    return this->_strDepartTime;
+}
+
+/************
+* @Description Lấy điểm đến
+*************/
 string Flight::getDestination() const
 {
-    return _strDestination;
+    return this->_strDestination;
 }
 
+/************
+* @Description Lấy trạng thái (enum)
+*************/
 FlightStatus Flight::getStatus() const
 {
-    return _eStatus;
+    return this->_eStatus;
 }
 
+/************
+* @Description Lấy chuỗi mô tả trạng thái
+*************/
 string Flight::getStatusString() const
 {
-    return flightStatusToString(_eStatus);
+    return flightStatusToString(this->_eStatus);
 }
 
-std::string Flight::getDepartTime() const
-{
-    return _strDepartTime;
-}
-
-void Flight::setDepartTime(const std::string& time)
-{
-    _strDepartTime = time;
-}
-
+/************
+* @Description Lấy tổng số ghế
+*************/
 int Flight::getTotalSeatCount() const
 {
-    return _seatList.getTotalSeats();
+    return this->_SeatList.getTotalSeats();
 }
 
+/************
+* @Description Lấy số ghế trống
+*************/
 int Flight::getFreeSeatCount() const
 {
-    return _seatList.countFreeSeats();
+    return this->_SeatList.countFreeSeats();
 }
 
+/************
+* @Description Lấy số ghế đã đặt
+*************/
 int Flight::getBookedSeatCount() const
 {
-    // Tong ghe - ghe trong = so ve da dat
-    return getTotalSeatCount() - getFreeSeatCount();
+    return this->getTotalSeatCount() - this->getFreeSeatCount();
 }
 
-// ===== Chuỗi danh sách ghế đã đặt (ví dụ: "2, 3, 5") =====
+/************
+* @Description Lấy chuỗi danh sách ghế đã đặt (ví dụ: "2, 3, 5")
+*************/
 string Flight::getBookedSeatListString() const
 {
-    std::vector<Ticket> vTickets = _listTickets.toVector();
+    // Rule 27: Dùng this-> truy cập _ListTickets
+    vector<Ticket> vTickets = this->_ListTickets.toVector();
+    
     if (vTickets.empty())
     {
         return "-";
     }
 
-    std::sort(vTickets.begin(), vTickets.end(),
-              [](const Ticket &a, const Ticket &b)
-              {
-                  return a.getSeatNumber() < b.getSeatNumber();
-              });
+    // Sort vé theo số ghế tăng dần để hiển thị đẹp
+    sort(vTickets.begin(), vTickets.end(),
+         [](const Ticket &a, const Ticket &b)
+         {
+             return a.getSeatNumber() < b.getSeatNumber();
+         });
 
-    std::ostringstream oss;
+    ostringstream oss;
     for (size_t i = 0; i < vTickets.size(); ++i)
     {
         if (i > 0)
@@ -217,82 +282,100 @@ string Flight::getBookedSeatListString() const
     return oss.str();
 }
 
-// ============================ Trang thai ============================
+// ============================ Status Checks ============================
 
+/************
+* @Description Kiểm tra đã hủy
+*************/
 bool Flight::isCancelled() const
 {
-    return (_eStatus == FLIGHT_CANCELLED);
+    return (this->_eStatus == FLIGHT_CANCELLED);
 }
 
+/************
+* @Description Kiểm tra đã đầy vé
+*************/
 bool Flight::isFull() const
 {
-    return (_eStatus == FLIGHT_FULL);
+    return (this->_eStatus == FLIGHT_FULL);
 }
 
+/************
+* @Description Kiểm tra còn khả dụng
+*************/
 bool Flight::isAvailable() const
 {
-    return (_eStatus == FLIGHT_AVAILABLE);
+    return (this->_eStatus == FLIGHT_AVAILABLE);
 }
 
-// ========================= Nghiệp vụ vé =========================
+// ========================= Business Logic =========================
 
+/************
+* @Description Đặt vé cho khách hàng
+*************/
 bool Flight::bookTicket(const string &strCustomerId,
                         const string &strCustomerName,
                         int iSeatNumber)
 {
     // 1. Kiem tra trang thai cho phep dat ve
-    if (_eStatus == FLIGHT_CANCELLED ||
-        _eStatus == FLIGHT_FULL ||
-        _eStatus == FLIGHT_COMPLETED)
+    if (this->_eStatus == FLIGHT_CANCELLED ||
+        this->_eStatus == FLIGHT_FULL ||
+        this->_eStatus == FLIGHT_COMPLETED)
     {
         cout << ">> Loi: Trang thai chuyen bay khong cho phep dat ve!\n";
         return false;
     }
 
-    // 2. Thu dat ghe trong SeatList
-    if (!_seatList.bookSeat(iSeatNumber))
+    // 2. Thu dat ghe trong SeatList (dùng this->)
+    if (!this->_SeatList.bookSeat(iSeatNumber))
     {
         cout << ">> Loi: So ghe khong hop le hoac da duoc dat!\n";
         return false;
     }
 
     // 3. Tao ve va them vao danh sach ve
-    Ticket newTicket(_strFlightId, strCustomerId, strCustomerName, iSeatNumber);
-    newTicket.makeTicketId();
+    Ticket newTicket(this->_strFlightId, strCustomerId, strCustomerName, iSeatNumber);
+    // ID vé được tạo tự động trong constructor của Ticket hoặc gọi hàm makeTicketId
+    // newTicket.makeTicketId(); // Nếu constructor đã gọi rồi thì dòng này thừa
 
-    _listTickets.addTail(newTicket);
+    this->_ListTickets.addTail(newTicket);
 
     // 4. Cap nhat trang thai (neu khong con ghe trong -> FULL)
-    if (_seatList.countFreeSeats() == 0)
+    if (this->_SeatList.countFreeSeats() == 0)
     {
-        _eStatus = FLIGHT_FULL;
+        this->_eStatus = FLIGHT_FULL;
     }
-    else if (_eStatus != FLIGHT_AVAILABLE && _eStatus != FLIGHT_CANCELLED)
+    else if (this->_eStatus != FLIGHT_AVAILABLE && this->_eStatus != FLIGHT_CANCELLED)
     {
-        _eStatus = FLIGHT_AVAILABLE;
+        this->_eStatus = FLIGHT_AVAILABLE;
     }
 
     return true;
 }
 
+/************
+* @Description Hủy vé theo số ghế
+*************/
 bool Flight::cancelTicketBySeat(int iSeatNumber)
 {
     // 1. Thu huy ghe trong SeatList
-    if (!_seatList.cancelSeat(iSeatNumber))
+    if (!this->_SeatList.cancelSeat(iSeatNumber))
     {
         cout << ">> Loi: Khong the huy ghe nay (so ghe khong hop le hoac dang trong)!\n";
         return false;
     }
 
     // 2. Xoa ve trong danh sach ve
-    Ticket key(_strFlightId, "", "", iSeatNumber);
-    key.makeTicketId();
-    _listTickets.remove(key);   // Neu khong tim thay thi ham remove() se khong lam gi
+
+    Ticket key(this->_strFlightId, "", "", iSeatNumber);
+   
+    
+    this->_ListTickets.remove(key); 
 
     // 3. Neu chuyen bay dang la FULL ma co ghe trong -> chuyen ve AVAILABLE
-    if (_eStatus == FLIGHT_FULL && _seatList.countFreeSeats() > 0)
+    if (this->_eStatus == FLIGHT_FULL && this->_SeatList.countFreeSeats() > 0)
     {
-        _eStatus = FLIGHT_AVAILABLE;
+        this->_eStatus = FLIGHT_AVAILABLE;
     }
 
     return true;
@@ -300,36 +383,39 @@ bool Flight::cancelTicketBySeat(int iSeatNumber)
 
 // =============================== Display ===============================
 
+/************
+* @Description In thông tin tóm tắt (1 dòng)
+*************/
 void Flight::print() const
 {
     // ======= Chuẩn bị dữ liệu =======
-    std::vector<Ticket> vTickets = _listTickets.toVector();
-    std::sort(vTickets.begin(), vTickets.end(),
-              [](const Ticket& a, const Ticket& b)
-              {
-                  return a.getSeatNumber() < b.getSeatNumber();
-              });
+    vector<Ticket> vTickets = this->_ListTickets.toVector();
+    sort(vTickets.begin(), vTickets.end(),
+         [](const Ticket& a, const Ticket& b)
+         {
+             return a.getSeatNumber() < b.getSeatNumber();
+         });
 
-    std::vector<int> seats;
+    vector<int> seats;
     seats.reserve(vTickets.size());
     for (auto &t : vTickets)
         seats.push_back(t.getSeatNumber());
 
-    const int SEATS_PER_LINE = 15;      // tối đa 15 ghế mỗi dòng
+    const int SEATS_PER_LINE = 15;      // Magic number chấp nhận được vì là const local
     size_t n = seats.size();
     size_t idx = 0;
 
     // ======= In dòng đầu (có đầy đủ cột) =======
-    int color = getStatusColor(_eStatus);
+    int color = getStatusColor(this->_eStatus);
     setTextColor(color);
 
     cout << left
-         << setw(8)  << _strFlightId
-         << setw(8)  << _strPlaneId
-         << setw(12) << _strDate
-         << setw(8)  << _strDepartTime
-         << setw(20) << _strDestination
-         << setw(15) << getStatusString();
+         << setw(8)  << this->_strFlightId
+         << setw(8)  << this->_strPlaneId
+         << setw(12) << this->_strDate
+         << setw(8)  << this->_strDepartTime
+         << setw(20) << this->_strDestination
+         << setw(15) << this->getStatusString();
 
     // In chunk đầu tiên của VeDaDat
     if (n == 0)
@@ -339,7 +425,7 @@ void Flight::print() const
         return;
     }
 
-    // dòng đầu chỉ in 1 chunk
+    // Dòng đầu chỉ in 1 chunk
     for (size_t i = 0; i < n && i < SEATS_PER_LINE; ++i)
     {
         cout << seats[i];
@@ -349,7 +435,7 @@ void Flight::print() const
     cout << "\n";
     idx += SEATS_PER_LINE;
 
-    // ======= Các dòng tiếp theo (thụt cột) =======
+    // ======= Các dòng tiếp theo (thụt cột để hiển thị danh sách vé dài) =======
     while (idx < n)
     {
         cout << left
@@ -373,25 +459,25 @@ void Flight::print() const
     setTextColor(COLOR_DEFAULT);
 }
 
-
-
+/************
+* @Description In chi tiết chuyến bay
+*************/
 void Flight::printDetail() const
 {
     cout << "========================================\n";
-    cout << " CHI TIET CHUYEN BAY: " << _strFlightId << "\n";
-    cout << " May bay    : " << _strPlaneId       << "\n";
-    cout << " Ngay di    : " << _strDate          << "\n";
-    cout << " Gio di     : " << _strDepartTime    << "\n";   
-    cout << " Diem den   : " << _strDestination   << "\n";
-    cout << " Trang thai : " << getStatusString() << "\n";
-    cout << " Tong ghe   : " << getTotalSeatCount()   << "\n";
-    cout << " Ghe trong  : " << getFreeSeatCount()    << "\n";
-    cout << " Da dat     : " << getBookedSeatCount()  << "\n";
+    cout << " CHI TIET CHUYEN BAY: " << this->_strFlightId << "\n";
+    cout << " May bay    : " << this->_strPlaneId       << "\n";
+    cout << " Ngay di    : " << this->_strDate          << "\n";
+    cout << " Gio di     : " << this->_strDepartTime    << "\n";   
+    cout << " Diem den   : " << this->_strDestination   << "\n";
+    cout << " Trang thai : " << this->getStatusString() << "\n";
+    cout << " Tong ghe   : " << this->getTotalSeatCount()   << "\n";
+    cout << " Ghe trong  : " << this->getFreeSeatCount()    << "\n";
+    cout << " Da dat     : " << this->getBookedSeatCount()  << "\n";
     cout << "----------------------------------------\n";
 
-    _seatList.printSeatMap();
+    this->_SeatList.printSeatMap();
 
     cout << "\n(Thong tin chi tiet hanh khach se duoc thong ke o chuc nang rieng.)\n";
     cout << "========================================\n";
 }
-

@@ -6,25 +6,55 @@
 class Airplane
 {
 private:
-    std::string _strPlaneId;   // So hieu may bay (duy nhat)
-    int         _iSeatCount;   // So cho ngoi
+    std::string _strPlaneId;
+    int _iSeatCount;
 
 public:
-    // Constructor
+    /************
+    * @Description Constructor mặc định
+    *************/
     Airplane();
-    Airplane(const std::string &planeId, int seatCount);
 
-    // Setter
-    void setPlaneId(const std::string &planeId);
-    void setSeatCount(int seatCount);
+    /************
+    * @Description Constructor đầy đủ tham số
+    * @param strPlaneId Số hiệu máy bay
+    * @param iSeatCount Số lượng ghế
+    *************/
+    Airplane(const std::string& strPlaneId, const int iSeatCount);
 
-    // Getter
+    /************
+    * @Description Thiết lập số hiệu máy bay
+    * @param strPlaneId Số hiệu cần gán
+    *************/
+    void setPlaneId(const std::string& strPlaneId);
+
+    /************
+    * @Description Thiết lập số ghế
+    * @param iSeatCount Số ghế cần gán
+    *************/
+    void setSeatCount(const int iSeatCount);
+
+    /************
+    * @Description Lấy số hiệu máy bay
+    * @return Chuỗi số hiệu
+    *************/
     std::string getPlaneId() const;
-    int         getSeatCount() const;
 
-    // In thong tin
+    /************
+    * @Description Lấy số lượng ghế
+    * @return Số lượng ghế (int)
+    *************/
+    int getSeatCount() const;
+
+    /************
+    * @Description Hiển thị thông tin máy bay
+    *************/
     void print() const;
 
-    // So sanh object
-    bool operator==(const Airplane &other) const;
+    /************
+    * @Description So sánh hai máy bay (dựa trên ID)
+    * @param other Đối tượng máy bay cần so sánh
+    * @return true nếu trùng ID, ngược lại false
+    *************/
+    bool operator==(const Airplane& other) const;
 };

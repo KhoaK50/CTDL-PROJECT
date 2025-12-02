@@ -1,2 +1,1 @@
-user1 123456
-admin abcxyz
+abcxyz 123456

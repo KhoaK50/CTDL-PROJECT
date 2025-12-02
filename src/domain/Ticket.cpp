@@ -1,141 +1,180 @@
 #include "domain/Ticket.h"
+#include <iostream>
+#include <string>
 
-// ===============================================
-// Constructor mac dinh
-// ===============================================
+using namespace std;
+
+// ========================= Constructors =========================
+
+/************
+* @Description Constructor mặc định
+*************/
 Ticket::Ticket()
-    : _strTicketId(""),
-      _strFlightId(""),
-      _strCustomerId(""),
-      _strCustomerName(""),
-      _iSeatNumber(0)
 {
+    this->_strTicketId = "";
+    this->_strFlightId = "";
+    this->_strCustomerId = "";
+    this->_strCustomerName = "";
+    this->_iSeatNumber = 0;
 }
 
-// ===============================================
-// Constructor day du (TicketId se tu sinh)
-// ===============================================
-Ticket::Ticket(const std::string &strFlightId,
-               const std::string &strCustomerId,
-               const std::string &strCustomerName,
+/************
+* @Description Constructor đầy đủ tham số
+* @param strFlightId Mã chuyến bay
+* @param strCustomerId Mã khách hàng
+* @param strCustomerName Tên khách hàng
+* @param iSeatNumber Số ghế
+*************/
+Ticket::Ticket(const string &strFlightId,
+               const string &strCustomerId,
+               const string &strCustomerName,
                int iSeatNumber)
-    : _strTicketId(""),
-      _strFlightId(strFlightId),
-      _strCustomerId(strCustomerId),
-      _strCustomerName(strCustomerName),
-      _iSeatNumber(iSeatNumber)
 {
-    // Tu dong tao ma ve
-    makeTicketId();
+    this->_strTicketId = ""; 
+    this->_strFlightId = strFlightId;
+    this->_strCustomerId = strCustomerId;
+    this->_strCustomerName = strCustomerName;
+    this->_iSeatNumber = iSeatNumber;
+
+    this->makeTicketId();
 }
 
-// ===============================================
-// Copy constructor
-// ===============================================
+/************
+* @Description Copy Constructor
+*************/
 Ticket::Ticket(const Ticket &src)
-    : _strTicketId(src._strTicketId),
-      _strFlightId(src._strFlightId),
-      _strCustomerId(src._strCustomerId),
-      _strCustomerName(src._strCustomerName),
-      _iSeatNumber(src._iSeatNumber)
 {
+    this->_strTicketId = src._strTicketId;
+    this->_strFlightId = src._strFlightId;
+    this->_strCustomerId = src._strCustomerId;
+    this->_strCustomerName = src._strCustomerName;
+    this->_iSeatNumber = src._iSeatNumber;
 }
 
-// ===============================================
-// Destructor
-// ===============================================
+/************
+* @Description Destructor
+*************/
 Ticket::~Ticket()
 {
 }
 
-// ===============================================
-// Setter
-// ===============================================
-void Ticket::setFlightId(const std::string &strFlightId)
+// ========================= Setters =========================
+
+/************
+* @Description Thiết lập mã chuyến bay
+*************/
+void Ticket::setFlightId(const string &strFlightId)
 {
-    _strFlightId = strFlightId;
+    this->_strFlightId = strFlightId;
+    this->makeTicketId();
 }
 
-void Ticket::setCustomerId(const std::string &strCustomerId)
+/************
+* @Description Thiết lập mã khách hàng
+*************/
+void Ticket::setCustomerId(const string &strCustomerId)
 {
-    _strCustomerId = strCustomerId;
+    this->_strCustomerId = strCustomerId;
 }
 
-void Ticket::setCustomerName(const std::string &strCustomerName)
+/************
+* @Description Thiết lập tên khách hàng
+*************/
+void Ticket::setCustomerName(const string &strCustomerName)
 {
-    _strCustomerName = strCustomerName;
+    this->_strCustomerName = strCustomerName;
 }
 
+/************
+* @Description Thiết lập số ghế
+*************/
 void Ticket::setSeatNumber(int iSeatNumber)
 {
-    _iSeatNumber = iSeatNumber;
+    this->_iSeatNumber = iSeatNumber;
+    this->makeTicketId();
 }
 
-// ===============================================
-// Getter
-// ===============================================
-std::string Ticket::getTicketId() const
+// ========================= Getters =========================
+
+/************
+* @Description Lấy mã vé
+*************/
+string Ticket::getTicketId() const
 {
-    return _strTicketId;
+    return this->_strTicketId;
 }
 
-std::string Ticket::getFlightId() const
+/************
+* @Description Lấy mã chuyến bay
+*************/
+string Ticket::getFlightId() const
 {
-    return _strFlightId;
+    return this->_strFlightId;
 }
 
-std::string Ticket::getCustomerId() const
+/************
+* @Description Lấy mã khách hàng
+*************/
+string Ticket::getCustomerId() const
 {
-    return _strCustomerId;
+    return this->_strCustomerId;
 }
 
-std::string Ticket::getCustomerName() const
+/************
+* @Description Lấy tên khách hàng
+*************/
+string Ticket::getCustomerName() const
 {
-    return _strCustomerName;
+    return this->_strCustomerName;
 }
 
+/************
+* @Description Lấy số ghế
+*************/
 int Ticket::getSeatNumber() const
 {
-    return _iSeatNumber;
+    return this->_iSeatNumber;
 }
 
-// ===============================================
-// Tu tao ma ve dua tren thong tin chuyen va ghe
-// Vi du: FL001-15
-// ===============================================
+// ========================= Business & Utils =========================
+
+/************
+* @Description Tự động tạo mã vé dựa trên thông tin chuyến và ghế
+* Format: [FlightId]-[SeatNumber] (Ví dụ: FL001-15)
+*************/
 void Ticket::makeTicketId()
 {
-    _strTicketId = _strFlightId + "-" + std::to_string(_iSeatNumber);
+    this->_strTicketId = this->_strFlightId + "-" + to_string(this->_iSeatNumber);
 }
 
-// ===============================================
-// Hien thi thong tin ve
-// ===============================================
+/************
+* @Description Hiển thị thông tin vé
+*************/
 void Ticket::print() const
 {
-    std::cout << "Ma ve         : " << _strTicketId     << "\n";
-    std::cout << "Ma CB         : " << _strFlightId     << "\n";
-    std::cout << "CMND/CCCD     : " << _strCustomerId   << "\n";
-    std::cout << "Ho ten        : " << _strCustomerName << "\n";
-    std::cout << "So ghe        : " << _iSeatNumber     << "\n";
+    cout << "Ma ve         : " << this->_strTicketId     << "\n";
+    cout << "Ma CB         : " << this->_strFlightId     << "\n";
+    cout << "CMND/CCCD     : " << this->_strCustomerId   << "\n";
+    cout << "Ho ten        : " << this->_strCustomerName << "\n";
+    cout << "So ghe        : " << this->_iSeatNumber     << "\n";
 }
 
-// ===============================================
-// So sanh bang nhau (phuc vu CTDL template)
-// ===============================================
+// ========================= Operators =========================
+
+/************
+* @Description So sánh bằng nhau (phục vụ CTDL template)
+*************/
 bool Ticket::operator==(const Ticket &other) const
 {
-    // So sanh theo ma chuyen bay + so ghe
-    // (xem day la khoa chinh de tim / xoa ve)
-    return (_strFlightId == other._strFlightId &&
-            _iSeatNumber == other._iSeatNumber);
+    // So sánh theo mã chuyến bay + số ghế (khóa chính logic)
+    return (this->_strFlightId == other._strFlightId &&
+            this->_iSeatNumber == other._iSeatNumber);
 }
 
-// ===============================================
-// So sanh nho hon (sap xep theo so ghe)
-// Dung cho LinkedList<Ticket>::selectionSort()
-// ===============================================
+/************
+* @Description So sánh nhỏ hơn (sắp xếp theo số ghế)
+*************/
 bool Ticket::operator<(const Ticket &other) const
 {
-    return _iSeatNumber < other._iSeatNumber;
+    return this->_iSeatNumber < other._iSeatNumber;
 }

@@ -1,55 +1,84 @@
 #include "domain/Airplane.h"
+#include <iostream>
 
-// ========================= Constructors =========================
+using namespace std;
 
+/************
+* @Description Constructor mặc định
+*************/
 Airplane::Airplane()
-    : _strPlaneId(""), _iSeatCount(0)
 {
+    this->_strPlaneId = "";
+    this->_iSeatCount = 0;
 }
 
-Airplane::Airplane(const std::string &planeId, int seatCount)
-    : _strPlaneId(planeId), _iSeatCount(seatCount)
+/************
+* @Description Constructor đầy đủ tham số
+* @param strPlaneId Số hiệu máy bay
+* @param iSeatCount Số lượng ghế
+*************/
+Airplane::Airplane(const string& strPlaneId, const int iSeatCount)
 {
+    this->_strPlaneId = strPlaneId;
+    this->_iSeatCount = iSeatCount;
 }
 
-// ========================= Setter =========================
-
-void Airplane::setPlaneId(const std::string &planeId)
+/************
+* @Description Thiết lập số hiệu máy bay
+* @param strPlaneId Số hiệu cần gán
+*************/
+void Airplane::setPlaneId(const string& strPlaneId)
 {
-    _strPlaneId = planeId;
+    this->_strPlaneId = strPlaneId;
 }
 
-void Airplane::setSeatCount(int seatCount)
+/************
+* @Description Thiết lập số ghế
+* @param iSeatCount Số ghế cần gán
+*************/
+void Airplane::setSeatCount(const int iSeatCount)
 {
-    _iSeatCount = seatCount;
+    this->_iSeatCount = iSeatCount;
 }
 
-// ========================= Getter =========================
 
-std::string Airplane::getPlaneId() const
+/************
+* @Description Lấy số hiệu máy bay
+* @return Chuỗi số hiệu
+*************/
+string Airplane::getPlaneId() const
 {
-    return _strPlaneId;
+    return this->_strPlaneId;
 }
 
+/************
+* @Description Lấy số lượng ghế
+* @return Số lượng ghế (int)
+*************/
 int Airplane::getSeatCount() const
 {
-    return _iSeatCount;
+    return this->_iSeatCount;
 }
 
-// ========================= Print =========================
-
+/************
+* @Description Hiển thị thông tin máy bay
+*************/
 void Airplane::print() const
 {
-    std::cout << "\n===== THONG TIN MAY BAY =====\n";
-    std::cout << "So hieu may bay : " << _strPlaneId << "\n";
-    std::cout << "So cho ngoi     : " << _iSeatCount << "\n";
-    std::cout << "===================================\n";
+    cout << "\n===== THONG TIN MAY BAY =====\n";
+    cout << "So hieu may bay : " << this->_strPlaneId << "\n";
+    cout << "So cho ngoi     : " << this->_iSeatCount << "\n";
+    cout << "===================================\n";
 }
 
-// ========================= Comparison =========================
 
-bool Airplane::operator==(const Airplane &other) const
+/************
+* @Description So sánh hai máy bay
+* @param other Đối tượng máy bay cần so sánh
+* @return true nếu thông tin giống nhau
+*************/
+bool Airplane::operator==(const Airplane& other) const
 {
-    return (_strPlaneId == other._strPlaneId &&
-            _iSeatCount == other._iSeatCount);
+    return (this->_strPlaneId == other._strPlaneId &&
+            this->_iSeatCount == other._iSeatCount);
 }

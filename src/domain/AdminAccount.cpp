@@ -1,78 +1,106 @@
 #include "domain/AdminAccount.h"
+#include <iostream> 
 
-// =====================================================
-// Constructor mặc định
-// =====================================================
+using namespace std;
+
+// ========================= Constructors =========================
+
+/************
+* @Description Constructor mặc định
+*************/
 AdminAccount::AdminAccount()
-    : _strUserName(""), _strPassword("")
 {
+    this->_strUserName = "";
+    this->_strPassword = "";
 }
 
-// =====================================================
-// Constructor đầy đủ
-// =====================================================
-AdminAccount::AdminAccount(const std::string &strUserName,
-                           const std::string &strPassword)
-    : _strUserName(strUserName),
-      _strPassword(strPassword)
+/************
+* @Description Constructor đầy đủ tham số
+* @param strUserName Tên đăng nhập
+* @param strPassword Mật khẩu
+*************/
+AdminAccount::AdminAccount(const string &strUserName, const string &strPassword)
 {
+    this->_strUserName = strUserName;
+    this->_strPassword = strPassword;
 }
 
-// =====================================================
-// Copy constructor
-// =====================================================
+/************
+* @Description Copy constructor
+* @param src Đối tượng nguồn
+*************/
 AdminAccount::AdminAccount(const AdminAccount &src)
-    : _strUserName(src._strUserName),
-      _strPassword(src._strPassword)
 {
+    this->_strUserName = src._strUserName;
+    this->_strPassword = src._strPassword;
 }
 
-// =====================================================
-// Destructor
-// =====================================================
+/************
+* @Description Destructor
+*************/
 AdminAccount::~AdminAccount()
 {
 }
 
-// =====================================================
-// Setter
-// =====================================================
-void AdminAccount::setUserName(const std::string &strUserName)
+// ========================= Setter =========================
+
+/************
+* @Description Thiết lập tên đăng nhập
+* @param strUserName Tên đăng nhập mới
+*************/
+void AdminAccount::setUserName(const string &strUserName)
 {
-    _strUserName = strUserName;
+    this->_strUserName = strUserName;
 }
 
-void AdminAccount::setPassword(const std::string &strPassword)
+/************
+* @Description Thiết lập mật khẩu
+* @param strPassword Mật khẩu mới
+*************/
+void AdminAccount::setPassword(const string &strPassword)
 {
-    _strPassword = strPassword;
+    this->_strPassword = strPassword;
 }
 
-// =====================================================
-// Getter
-// =====================================================
-std::string AdminAccount::getUserName() const
+// ========================= Getter =========================
+
+/************
+* @Description Lấy tên đăng nhập
+* @return Tên đăng nhập hiện tại
+*************/
+string AdminAccount::getUserName() const
 {
-    return _strUserName;
+    return this->_strUserName;
 }
 
-std::string AdminAccount::getPassword() const
+/************
+* @Description Lấy mật khẩu
+* @return Mật khẩu hiện tại
+*************/
+string AdminAccount::getPassword() const
 {
-    return _strPassword;
+    return this->_strPassword;
 }
 
-// =====================================================
-// In thông tin admin (dùng debug)
-// =====================================================
+// ========================= Print =========================
+
+/************
+* @Description In thông tin admin (dùng debug)
+*************/
 void AdminAccount::print() const
 {
-    std::cout << "[Admin] " << _strUserName << "\n";
+    cout << "[Admin] " << this->_strUserName << "\n";
 }
 
-// =====================================================
-// So sánh object – cần cho LinkedList/Queue/Stack
-// =====================================================
+// ========================= Operator =========================
+
+/************
+* @Description So sánh hai tài khoản
+* @param other Tài khoản cần so sánh
+* @return true nếu giống nhau
+*************/
 bool AdminAccount::operator==(const AdminAccount &other) const
 {
-    return (_strUserName == other._strUserName &&
-            _strPassword == other._strPassword);
+    return (this->_strUserName == other._strUserName &&
+            this->_strPassword == other._strPassword);
 }

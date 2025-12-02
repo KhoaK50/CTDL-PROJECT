@@ -14,62 +14,87 @@ using std::setfill;
 
 // ========================= Constructor / Destructor =========================
 
+/************
+* @Description Constructor mặc định
+*************/
 SeatList::SeatList()
     : _iTotalSeats(0), _vSeatFree()
 {
 }
 
+/************
+* @Description Constructor khởi tạo với số lượng ghế
+* @param iTotalSeats Tổng số ghế
+*************/
 SeatList::SeatList(int iTotalSeats)
     : _iTotalSeats(0), _vSeatFree()
 {
-    init(iTotalSeats);
+    this->init(iTotalSeats);
 }
 
+/************
+* @Description Destructor
+*************/
 SeatList::~SeatList()
 {
 }
 
 // ============================== Init / Basic ==============================
 
+/************
+* @Description Khởi tạo danh sách ghế
+*************/
 void SeatList::init(int iTotalSeats)
 {
     if (iTotalSeats > 0)
     {
-        _iTotalSeats = iTotalSeats;
-        _vSeatFree.assign(iTotalSeats, true);
+        this->_iTotalSeats = iTotalSeats;
+        this->_vSeatFree.assign(iTotalSeats, true);
     }
     else
     {
-        _iTotalSeats = 0;
-        _vSeatFree.clear();
+        this->_iTotalSeats = 0;
+        this->_vSeatFree.clear();
     }
 }
 
+/************
+* @Description Lấy tổng số ghế
+*************/
 int SeatList::getTotalSeats() const
 {
-    return _iTotalSeats;
+    return this->_iTotalSeats;
 }
 
+/************
+* @Description Kiểm tra số ghế có hợp lệ không
+*************/
 bool SeatList::isSeatValid(int iSeatNumber) const
 {
-    return (iSeatNumber >= 1 && iSeatNumber <= _iTotalSeats);
+    return (iSeatNumber >= 1 && iSeatNumber <= this->_iTotalSeats);
 }
 
+/************
+* @Description Kiểm tra ghế có trống không
+*************/
 bool SeatList::isSeatFree(int iSeatNumber) const
 {
-    if (!isSeatValid(iSeatNumber))
+    if (!this->isSeatValid(iSeatNumber))
     {
         return false;
     }
 
-    return _vSeatFree[iSeatNumber - 1];
+    return this->_vSeatFree[iSeatNumber - 1];
 }
 
+/************
+* @Description Đếm số ghế trống
+*************/
 int SeatList::countFreeSeats() const
 {
     int iCount = 0;
 
-    for (bool bIsFree : _vSeatFree)
+    for (bool bIsFree : this->_vSeatFree)
     {
         if (bIsFree)
         {
@@ -82,43 +107,52 @@ int SeatList::countFreeSeats() const
 
 // ============================ Đặt / Hủy ghế ============================
 
+/************
+* @Description Đặt ghế
+*************/
 bool SeatList::bookSeat(int iSeatNumber)
 {
-    if (!isSeatValid(iSeatNumber) || !isSeatFree(iSeatNumber))
+    if (!this->isSeatValid(iSeatNumber) || !this->isSeatFree(iSeatNumber))
     {
         return false;
     }
 
-    _vSeatFree[iSeatNumber - 1] = false;
+    this->_vSeatFree[iSeatNumber - 1] = false;
     return true;
 }
 
+/************
+* @Description Hủy đặt ghế
+*************/
 bool SeatList::cancelSeat(int iSeatNumber)
 {
-    if (!isSeatValid(iSeatNumber))
+    if (!this->isSeatValid(iSeatNumber))
     {
         return false;
     }
 
-    if (_vSeatFree[iSeatNumber - 1])
+    if (this->_vSeatFree[iSeatNumber - 1])
     {
         // Ghế đang trống, không thể hủy
         return false;
     }
 
-    _vSeatFree[iSeatNumber - 1] = true;
+    this->_vSeatFree[iSeatNumber - 1] = true;
     return true;
 }
 
 // ========================== In danh sách ghế ==========================
 
+/************
+* @Description In danh sách các số ghế đang trống
+*************/
 void SeatList::printFreeSeats() const
 {
     cout << "Cac ghe con trong: ";
 
-    for (int iIndex = 0; iIndex < _iTotalSeats; ++iIndex)
+    for (int iIndex = 0; iIndex < this->_iTotalSeats; ++iIndex)
     {
-        if (_vSeatFree[iIndex])
+        if (this->_vSeatFree[iIndex])
         {
             cout << (iIndex + 1) << " ";
         }
@@ -127,6 +161,9 @@ void SeatList::printFreeSeats() const
     cout << endl;
 }
 
+/************
+* @Description In sơ đồ ghế trực quan
+*************/
 void SeatList::printSeatMap() const
 {
     const int iSeatsPerRow    = 6;  // mỗi hàng 6 ghế
@@ -134,7 +171,7 @@ void SeatList::printSeatMap() const
 
     cout << "\n\tSO DO GHE (mau xanh = trong, do = da dat)\n\n";
 
-    int total = _iTotalSeats;
+    int total = this->_iTotalSeats;
     if (total <= 0)
     {
         cout << "\t(Chua co ghe nao duoc khai bao)\n";
@@ -170,7 +207,7 @@ void SeatList::printSeatMap() const
         cout << "|";
 
         // Chọn màu theo trạng thái ghế
-        setTextColor(_vSeatFree[i] ? COLOR_SUCCESS : COLOR_ERROR);
+        setTextColor(this->_vSeatFree[i] ? COLOR_SUCCESS : COLOR_ERROR);
 
         // Bên trong ô: " 001 "
         cout << " " << seatStr << " ";
